@@ -1,11 +1,15 @@
 {
   "name": "lab5",
   "module": "src/index.ts",
-  "type": "module",
   "scripts": {
+    "build": "esbuild index.ts --platform=node --bundle --minify --outfile=dist/index.js",
+    "serve": "npm run build && npm run start",
+    "start": "node dist/index.js",
     "gen-vapid": "web-push generate-vapid-keys"
   },
   "devDependencies": {
+    "@types/node": "^20.8.9",
+    "esbuild": "^0.19.5",
     "@types/express": "^4.17.21",
     "bun-types": "latest"
   },
@@ -13,8 +17,12 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@types/web-push": "^3.6.3",
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "web-push": "^3.6.6"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

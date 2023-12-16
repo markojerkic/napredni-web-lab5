@@ -9,32 +9,32 @@ app.use(express.static(path.join(__dirname, './public')))
 app.use(bodyParser.json());
 
 app.get("/", async (req, res) => {
-    const index = Bun.file("./public/index.html");
-    res.send(await index.text());
+    const index = fs.readFileSync("./public/index.html");
+    res.send(index.toString());
 });
 
 app.post("/lastfile", async (req, res) => {
     const body = req.body;
     console.log("lastFile", body);
-    Bun.write("./lastFile", JSON.stringify(body))
+    fs.writeFileSync("./lastFile", JSON.stringify(body))
     sendPushNotifications(body.file);
     res.json({});
 });
 
 app.get("/lastfile", async (req, res) => {
-    const lastFile = Bun.file("./lastFile")
-    res.send(await lastFile.text());
+    const lastFile = fs.readFileSync("./lastFile").toString()
+    res.send(lastFile);
 });
 
 
 // potrebno na VER06
-const webpush = require('web-push');
+import webpush from 'web-push';
 
 // Umjesto baze podataka, čuvam pretplate u datoteci:
 let subscriptions: any[] = [];
 const SUBS_FILENAME = 'subscriptions.json';
 try {
-    subscriptions = JSON.parse(await Bun.file(SUBS_FILENAME).text());
+    subscriptions = JSON.parse(fs.readFileSync(SUBS_FILENAME).toString());
 } catch (error) {
     console.error(error);
 }
