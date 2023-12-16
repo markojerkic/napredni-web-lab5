@@ -1,0 +1,13 @@
+{
+  "name": "Napredni web lab 5",
+  "short_name": "Lab 5",
+  "description": "Napredni web lab 5",
+  "display": "fullscreen",
+  "theme_color": "red",
+  "background_color": "#DDD",
+  "start_url": "/",
+  "scope": ".",
+  "orientation": "portrait-primary",
+  "dir": "ltr",
+  "lang": "hr-HR"
+}
