@@ -2,6 +2,9 @@
   "name": "lab5",
   "module": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "gen-vapid": "web-push generate-vapid-keys"
+  },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "bun-types": "latest"
