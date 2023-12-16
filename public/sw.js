@@ -18,7 +18,7 @@ self.addEventListener("install", (event) => {
     );
 });
 
-elf.addEventListener("activate", (event) => {
+self.addEventListener("activate", (event) => {
     console.log("**************************************");
     console.log("**   Activating new service worker... **");
     console.log("**************************************");

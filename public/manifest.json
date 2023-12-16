@@ -9,5 +9,15 @@
   "scope": ".",
   "orientation": "portrait-primary",
   "dir": "ltr",
-  "lang": "hr-HR"
+  "lang": "hr-HR",
+  "icons": [
+    {
+      "src": "chrome-installprocess-128-128.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "LargeTile.scale-400.png",
+      "sizes": "400x400"
+    }
+  ]
 }
