@@ -74,3 +74,80 @@ self.addEventListener("fetch", (event) => {
     );
 });
 
+self.addEventListener("sync", function(event) {
+    console.log("Background sync!", event);
+    if (event.tag === "sync-snaps") {
+        event.waitUntil(sync());
+    }
+});
+
+const sync = async () => {
+    entries().then(entries => {
+        entries.forEach(entry => {
+            let e = entry[1];
+
+            fetch("/lastFile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ file: e.file })
+            })
+
+        });
+
+    })
+}
+
+
+
+self.addEventListener("notificationclick", (event) => {
+    let notification = event.notification;
+    notification.close();
+    console.log("notificationclick", notification);
+    event.waitUntil(
+        clients
+            .matchAll({ type: "window", includeUncontrolled: true })
+            .then(function(clis) {
+                if (clis && clis.length > 0) {
+                    clis.forEach(async (client) => {
+                        await client.navigate(notification.data.redirectUrl);
+                        return client.focus();
+                    });
+                } else if (clients.openWindow) {
+                    return clients
+                        .openWindow(notification.data.redirectUrl)
+                        .then((windowClient) =>
+                            windowClient ? windowClient.focus() : null
+                        );
+                }
+            })
+    );
+});
+
+self.addEventListener("notificationclose", function(event) {
+    console.log("notificationclose", event);
+});
+
+self.addEventListener("push", function(event) {
+    console.log("push event", event);
+
+    var data = { title: "title", body: "body", redirectUrl: "/" };
+
+    if (event.data) {
+        data = JSON.parse(event.data.text());
+    }
+
+    var options = {
+        body: data.body,
+        icon: "LargeTile.scale-400.png",
+        badge: "LargeTile.scale-400.png",
+        vibrate: [200, 100, 200, 100, 200, 100, 200],
+        data: {
+            redirectUrl: data.redirectUrl,
+        },
+    };
+
+    event.waitUntil(self.registration.showNotification(data.title, options));
+});
+
