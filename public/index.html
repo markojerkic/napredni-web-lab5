@@ -16,6 +16,8 @@
         <h1>PWA</h1>
 
         <section id="editor">
+            <p id="lastEditedName"></p>
+
             <textarea style="width: 90vw; height: 70vh" placeholder="Open a text file from your device to edit it"
                 id="contents"></textarea>
             <section class="toolbar">
@@ -35,6 +37,10 @@
             console.error("Error registering service worker", err)
         );
 
+    function showResult(rs) {
+        console.log(rs);
+    }
+
     window.addEventListener("DOMContentLoaded", async event => {
         document.querySelector("#openFile").addEventListener("click", openFile);
         document.querySelector("#saveFile").addEventListener("click", saveFile);
@@ -49,17 +55,45 @@
 
     let handler;
 
+
+    fetch("/lastFile").then(file => {
+        if (!file.ok) {
+            return null
+        }
+        return file.json();
+    }).then(file => {
+        if (file) {
+            const p = document.getElementById("lastEditedName")
+            if (p) {
+                p.innerText = `Last edited file is "${file.file}"`;
+            }
+        }
+    })
+
     async function openFile() {
         // Have the user select a file
         handler = (await window.showOpenFilePicker())[0];
         // Get the File object from the handler
         const file = await handler.getFile();
+        console.log("file", file);
+        saveLastFile(file.name)
         // Get the file content.
         // Also available, slice(), stream(), arrayBuffer()
         const content = await file.text();
         // Put the contents in the textarea element
         document.querySelector("#contents").value = content;
         showResult("File loaded");
+    }
+
+    async function saveLastFile(file) {
+        console.log("save file sync", file);
+        return await fetch("/lastFile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({file: file})
+        })
     }
 
     async function saveFile() {

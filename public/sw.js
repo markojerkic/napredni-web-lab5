@@ -1,3 +1,5 @@
+import { del, entries } from "./idb-keyval.js";
+
 const staticCacheName = "static-cache-v2";
 
 const filesToCache = [
